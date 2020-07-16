@@ -23,6 +23,12 @@ buildscript {
         //tokenSDK
         tokens_release_version = '1.1'
         tokens_release_group = 'com.r3.corda.lib.tokens'
+        //account
+        accounts_release_group = 'com.r3.corda.lib.accounts'
+        accounts_release_version = '1.0'
+        //CI
+        confidential_id_release_group = "com.r3.corda.lib.ci"
+        confidential_id_release_version = "1.0"
     }
 
     repositories {
@@ -30,6 +36,7 @@ buildscript {
         mavenCentral()
         jcenter()
         maven { url 'https://ci-artifactory.corda.r3cev.com/artifactory/corda-releases' }
+        maven { url 'http://ci-artifactory.corda.r3cev.com/artifactory/corda-lib' }
 
     }
 
@@ -105,6 +112,10 @@ dependencies {
     cordapp "$tokens_release_group:tokens-workflows:$tokens_release_version"
     cordapp "$tokens_release_group:tokens-money:$tokens_release_version"
     cordapp "$tokens_release_group:tokens-selection:$tokens_release_version"
+    //accounts
+    cordapp "$accounts_release_group:accounts-contracts:$accounts_release_version"
+    cordapp "$confidential_id_release_group:ci-workflows:$confidential_id_release_version"
+    cordapp "$accounts_release_group:accounts-workflows:$accounts_release_version"
 }
 
 cordapp {
@@ -137,6 +148,11 @@ task deployNodes(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
         }
         cordapp project(':contracts')
         cordapp project(':workflows')
+        //acounts
+        cordapp("$confidential_id_release_group:ci-workflows:$confidential_id_release_version")
+        cordapp("$accounts_release_group:accounts-contracts:$accounts_release_version")
+        cordapp("$accounts_release_group:accounts-workflows:$accounts_release_version")
+        //TokenSDK
         cordapp("$tokens_release_group:tokens-contracts:$tokens_release_version")
         cordapp("$tokens_release_group:tokens-workflows:$tokens_release_version")
         cordapp("$tokens_release_group:tokens-money:$tokens_release_version")
